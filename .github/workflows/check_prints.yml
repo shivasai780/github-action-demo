@@ -1,0 +1,35 @@
+name: Check for print statements
+
+# 🔹 Trigger this workflow on push or pull requests to main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    name: Lint Python Code for print()
+    runs-on: ubuntu-latest   # The OS runner environment
+
+    steps:
+    # Step 1️⃣: Checkout your repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2️⃣: Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"  # You can change version if needed
+
+      # Step 3️⃣: Find any print statements in Python files
+      - name: Check for print statements
+        run: |
+          echo "🔍 Checking for print statements..."
+          if grep -R "print(" . --include="*.py"; then
+            echo "❌ Found print statements. Please remove them before committing."
+            exit 1
+          else
+            echo "✅ No print statements found."
+          fi
